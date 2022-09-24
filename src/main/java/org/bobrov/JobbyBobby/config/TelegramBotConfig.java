@@ -24,14 +24,6 @@ public class TelegramBotConfig {
     @Value("${telegrambot.botPath}")
     private String botPath;
 
-
-    @Bean
-    public SetWebhook setWebhook() {
-        return SetWebhook.builder()
-                .url(webHookPath)
-                .build();
-    }
-
     @Bean
     @SneakyThrows
     public JobbyBot telegramBot() {
@@ -40,7 +32,9 @@ public class TelegramBotConfig {
         bot.setBotToken(botToken);
         bot.setBotUsername(userName);
         bot.setBotPath(botPath);
-        bot.setWebhook(setWebhook());
+        bot.setWebhook(SetWebhook.builder()
+                .url(webHookPath)
+                .build());
 
         return bot;
     }
