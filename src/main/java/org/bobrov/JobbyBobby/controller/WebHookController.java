@@ -4,16 +4,18 @@ import lombok.RequiredArgsConstructor;
 import org.bobrov.JobbyBobby.model.JobbyBot;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 @RestController
+@RequestMapping("/callback")
 @RequiredArgsConstructor
 public class WebHookController {
     private final JobbyBot jobbyBot;
 
-    @PostMapping("/")
+    @PostMapping("/jobby")
     public BotApiMethod<?> onUpdateReceived(@RequestBody Update update) {
         return jobbyBot.onWebhookUpdateReceived(update);
     }

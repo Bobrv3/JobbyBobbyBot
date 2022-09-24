@@ -4,4 +4,5 @@ server:
 telegrambot:
   userName: ${bot.username}
   botToken: ${bot.token}
-  webHookPath: ${bot.path}
+  botPath: "/jobby"
+  webHookPath: ${bot.webhook}

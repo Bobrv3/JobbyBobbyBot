@@ -21,9 +21,12 @@ public class TelegramBotConfig {
     @Value("${telegrambot.botToken}")
     private String botToken;
 
+    @Value("${telegrambot.botPath}")
+    private String botPath;
+
 
     @Bean
-    public SetWebhook setWebhookInstance() {
+    public SetWebhook setWebhook() {
         return SetWebhook.builder()
                 .url(webHookPath)
                 .build();
@@ -36,7 +39,8 @@ public class TelegramBotConfig {
 
         bot.setBotToken(botToken);
         bot.setBotUsername(userName);
-        bot.setBotPath(webHookPath);
+        bot.setBotPath(botPath);
+        bot.setWebhook(setWebhook());
 
         return bot;
     }
