@@ -2,7 +2,7 @@ server:
   port: 80
 
 telegrambot:
-  userName: ${bot.username}
-  botToken: ${bot.token}
+  userName: ${BOT_USERNAME}
+  botToken: ${BOT_TOKEN}
   botPath: "/jobby"
-  webHookPath: ${bot.webhook}
+  webHookPath: ${BOT_WEBHOOK}
