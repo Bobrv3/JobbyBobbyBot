@@ -1,5 +1,5 @@
 server:
-  port: 80
+  port: ${PORT:8080}
 
 telegrambot:
   userName: ${BOT_USERNAME}
