@@ -1,0 +1,1 @@
+jobby: java -jar target/JobbyBobby-0.0.1-SNAPSHOT.jar
