@@ -2,6 +2,8 @@ package org.bobrov.JobbyBobby.service;
 
 import lombok.Data;
 import lombok.SneakyThrows;
+import org.bobrov.JobbyBobby.model.Vacancy;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
@@ -12,6 +14,7 @@ import org.telegram.telegrambots.meta.api.methods.updates.SetWebhook;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 
 @Data
 @Component
@@ -21,10 +24,15 @@ public class JobbyBot extends TelegramWebhookBot {
     private String botUsername;
     private String botToken;
     private String webHookPath;
-    
+    private String chatId = "388469857";
+
+    @Autowired
+    private HHclient hHclient;
+
     public JobbyBot() {
         super(new DefaultBotOptions());
     }
+
     @SneakyThrows
     @PostConstruct
     private void initialize() {
@@ -36,15 +44,19 @@ public class JobbyBot extends TelegramWebhookBot {
                 .build());
     }
 
+    @SneakyThrows
     @Override
     public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
-            return SendMessage.builder()
-                    .chatId(update.getMessage().getChatId())
-                    .text("You sent: " + update.getMessage().getText())
-                    .build();
-        }
+            List<Vacancy> allVacancies = hHclient.getAllVacancies();
 
+            for (Vacancy vacancy : allVacancies) {
+                execute(SendMessage.builder()
+                        .chatId(update.getMessage().getChatId())
+                        .text(vacancy.getAlternate_url())
+                        .build());
+            }
+        }
         return null;
     }
 }
