@@ -29,4 +29,17 @@ public class ExceptionControllerAdvice {
                 .text(errorResponse.toString())
                 .build());
     }
+    @SneakyThrows
+    @ExceptionHandler(RuntimeException.class)
+    public void runtimeError(HhResponseNotReceived ex) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .message(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        jobbyBot.execute(SendMessage.builder()
+                .chatId(jobbyBot.getChatId())
+                .text(errorResponse.toString())
+                .build());
+    }
 }

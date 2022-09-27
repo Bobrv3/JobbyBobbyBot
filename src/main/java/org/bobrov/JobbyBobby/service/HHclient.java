@@ -21,7 +21,7 @@ public class HHclient {
     private final RestTemplate restTemplate = new RestTemplate();
 
     @SneakyThrows
-    public List<Vacancy> getAllVacancies() {
+    public List<Vacancy> findVacancies() {
         ResponseEntity<HHresponse> exchange = restTemplate.exchange(URL, HttpMethod.GET, null, new ParameterizedTypeReference<>() {
         });
 
@@ -29,7 +29,7 @@ public class HHclient {
             HHresponse hhResponse = exchange.getBody();
             return hhResponse.getVacancies();
         } else {
-            throw new HhResponseNotReceived(exchange.getStatusCode() + " " + exchange.getStatusCodeValue());
+            throw new HhResponseNotReceived("HhResponseNotReceived:" + exchange.getStatusCode() + " " + exchange.getStatusCodeValue());
         }
     }
 }
