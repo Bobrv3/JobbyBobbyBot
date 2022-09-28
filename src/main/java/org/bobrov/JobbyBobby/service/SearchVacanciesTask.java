@@ -3,6 +3,8 @@ package org.bobrov.JobbyBobby.service;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.bobrov.JobbyBobby.model.Vacancy;
+import org.bobrov.JobbyBobby.model.criteria.Criteria;
+import org.bobrov.JobbyBobby.model.criteria.SearchCriteria;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -24,7 +26,17 @@ public class SearchVacanciesTask extends TimerTask {
     private final JobbyBot jobbyBot;
 
     @EventListener
+    @SneakyThrows
     public void handleContextStart(ApplicationReadyEvent are) {
+        // configure hhClient search criteria
+        Criteria criteria = new Criteria();
+        criteria.add(SearchCriteria.Text.class.getSimpleName().toLowerCase(), new SearchCriteria.Text("java"));
+        criteria.add(SearchCriteria.Area.class.getSimpleName().toLowerCase(), SearchCriteria.Area.Belarus);  // Belarus
+        criteria.add(SearchCriteria.Search_field.class.getSimpleName().toLowerCase(),  SearchCriteria.Search_field.name);
+        criteria.add(SearchCriteria.Experience.class.getSimpleName().toLowerCase(),  SearchCriteria.Experience.noExperience);
+        hHclient.setSearchCriteria(criteria);
+
+        // start executing SearchVacanciesTask
         Timer timer = new Timer(true);
         timer.schedule(this, 0, 30 * 60 * 1000);  // every 30min
     }

@@ -2,7 +2,6 @@ package org.bobrov.JobbyBobby.service;
 
 import lombok.Data;
 import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
@@ -22,9 +21,6 @@ public class JobbyBot extends TelegramWebhookBot {
     private String botToken;
     private String webHookPath;
     private String chatId = "388469857";
-
-    @Autowired
-    private HHclient hHclient;
 
     public JobbyBot() {
         super(new DefaultBotOptions());
