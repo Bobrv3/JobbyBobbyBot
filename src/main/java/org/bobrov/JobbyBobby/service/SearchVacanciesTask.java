@@ -5,14 +5,11 @@ import lombok.SneakyThrows;
 import org.bobrov.JobbyBobby.model.Vacancy;
 import org.bobrov.JobbyBobby.model.criteria.Criteria;
 import org.bobrov.JobbyBobby.model.criteria.SearchCriteria;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.List;
-import java.util.Timer;
 import java.util.TimerTask;
 
 /**
@@ -22,29 +19,19 @@ import java.util.TimerTask;
 @RequiredArgsConstructor
 public class SearchVacanciesTask extends TimerTask {
     private final VacancyService vacancyService;
-    private final HHclient hHclient;
     private final JobbyBot jobbyBot;
 
-    @EventListener
+    @Override
     @SneakyThrows
-    public void handleContextStart(ApplicationReadyEvent are) {
-        // configure hhClient search criteria
+    public void run() {
+        // configure search criteria
         Criteria criteria = new Criteria();
         criteria.add(SearchCriteria.Text.class.getSimpleName().toLowerCase(), new SearchCriteria.Text("java"));
         criteria.add(SearchCriteria.Area.class.getSimpleName().toLowerCase(), SearchCriteria.Area.Belarus);  // Belarus
         criteria.add(SearchCriteria.Search_field.class.getSimpleName().toLowerCase(),  SearchCriteria.Search_field.name);
         criteria.add(SearchCriteria.Experience.class.getSimpleName().toLowerCase(),  SearchCriteria.Experience.noExperience);
-        hHclient.setSearchCriteria(criteria);
 
-        // start executing SearchVacanciesTask
-        Timer timer = new Timer(true);
-        timer.schedule(this, 0, 30 * 60 * 1000);  // every 30min
-    }
-
-    @Override
-    @SneakyThrows
-    public void run() {
-        List<Vacancy> foundVacancies = hHclient.findVacancies();
+        List<Vacancy> foundVacancies = vacancyService.searchOnHH(criteria);
 
         checkNewVacancies(foundVacancies);
 
