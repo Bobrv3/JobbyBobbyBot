@@ -16,15 +16,15 @@ spring:
   h2:
     console:
       enabled: true
-  jackson:
-    deserialization:
-      FAIL_ON_UNKNOWN_PROPERTIES: false
 
 telegrambot:
   botUsername:
   botToken:
   botPath: "/jobby"
   webHookPath:
+
+searchPeriod:
+  minute: 30
 
 ---
 spring:

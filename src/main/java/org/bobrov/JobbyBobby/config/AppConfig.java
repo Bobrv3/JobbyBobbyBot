@@ -30,14 +30,14 @@ public class AppConfig {
     @SneakyThrows
     public void handleContextStart(ApplicationReadyEvent event) {
         Timer timer = new Timer(true);
-        timer.schedule(searchVacanciesTask, 0, 30 * 60 * 1000);  // every 30min
+        timer.schedule(searchVacanciesTask, 0, searchVacanciesTask.getTimeInterval() * 60 * 1000);
     }
 
     @EventListener
     @SneakyThrows
     public void handleAppFailed(ContextClosedEvent event) {
         bot.execute(SendMessage.builder()
-                .chatId(bot.getChatId())
+                .chatId("388469857")
                 .text("❌ App failed ❌")
                 .build());
     }

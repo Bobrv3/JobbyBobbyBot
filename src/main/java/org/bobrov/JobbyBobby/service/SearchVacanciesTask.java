@@ -1,14 +1,17 @@
 package org.bobrov.JobbyBobby.service;
 
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.bobrov.JobbyBobby.model.Vacancy;
 import org.bobrov.JobbyBobby.model.criteria.Criteria;
 import org.bobrov.JobbyBobby.model.criteria.SearchCriteria;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.TimerTask;
 
@@ -17,25 +20,31 @@ import java.util.TimerTask;
  */
 @Component
 @RequiredArgsConstructor
+@Data
 public class SearchVacanciesTask extends TimerTask {
     private final VacancyService vacancyService;
     private final JobbyBot jobbyBot;
+    @Value("${searchPeriod.minute}")
+    private int timeInterval;
 
     @Override
     @SneakyThrows
     public void run() {
         // configure search criteria
         Criteria criteria = new Criteria();
-        criteria.add(SearchCriteria.Text.class.getSimpleName().toLowerCase(), new SearchCriteria.Text("java"));
-        criteria.add(SearchCriteria.Area.class.getSimpleName().toLowerCase(), SearchCriteria.Area.Belarus);  // Belarus
-        criteria.add(SearchCriteria.Search_field.class.getSimpleName().toLowerCase(),  SearchCriteria.Search_field.name);
-        criteria.add(SearchCriteria.Experience.class.getSimpleName().toLowerCase(),  SearchCriteria.Experience.noExperience);
+        criteria.add(SearchCriteria.TEXT.class.getSimpleName().toLowerCase(), new SearchCriteria.TEXT("java"));
+        criteria.add(SearchCriteria.AREA.class.getSimpleName().toLowerCase(), SearchCriteria.AREA.Belarus);
+        criteria.add(SearchCriteria.SEARCH_FIELD.class.getSimpleName().toLowerCase(),  SearchCriteria.SEARCH_FIELD.name);
+        criteria.add(SearchCriteria.EXPERIENCE.class.getSimpleName().toLowerCase(),  SearchCriteria.EXPERIENCE.noExperience);
+        criteria.add(SearchCriteria.DATE_FROM.class.getSimpleName().toLowerCase(),
+                new SearchCriteria.DATE_FROM(LocalDateTime.now().minusMinutes(timeInterval)));
 
         List<Vacancy> foundVacancies = vacancyService.searchOnHH(criteria);
 
-        checkNewVacancies(foundVacancies);
-
-        sendNewVacancies(foundVacancies);
+        if (!foundVacancies.isEmpty()) {
+            checkNewVacancies(foundVacancies);
+            sendNewVacancies(foundVacancies);
+        }
     }
 
     private void sendNewVacancies(List<Vacancy> foundVacancies) throws TelegramApiException {
