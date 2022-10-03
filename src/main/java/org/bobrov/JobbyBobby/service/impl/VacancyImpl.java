@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.bobrov.JobbyBobby.dao.VacancyRepository;
 import org.bobrov.JobbyBobby.model.HHresponse;
 import org.bobrov.JobbyBobby.model.Vacancy;
-import org.bobrov.JobbyBobby.model.criteria.Criteria;
+import org.bobrov.JobbyBobby.model.criteria.Filter;
 import org.bobrov.JobbyBobby.proxy.HHProxy;
 import org.bobrov.JobbyBobby.service.VacancyService;
 import org.springframework.stereotype.Service;
@@ -41,12 +41,12 @@ public class VacancyImpl implements VacancyService {
     }
 
     @Override
-    public List<Vacancy> searchOnHH(Criteria criteria) {
-        HHresponse hHresponse = hhProxy.findVacancies(criteria.toParams());
+    public List<Vacancy> searchOnHH(Filter filter) {
+        HHresponse hHresponse = hhProxy.findVacancies(filter.toParams());
         List<Vacancy> vacancies = hHresponse.getVacancies();
 
         if (hHresponse.getPages() > 1) {
-            Map<String, String> params = criteria.toParams();
+            Map<String, String> params = filter.toParams();
 
             for (int i = 1; i < hHresponse.getPages(); i++) {
                 params.put("page", String.valueOf(i));

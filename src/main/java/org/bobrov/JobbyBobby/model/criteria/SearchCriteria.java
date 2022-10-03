@@ -1,9 +1,10 @@
 package org.bobrov.JobbyBobby.model.criteria;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public interface SearchCriteria {
-    class TEXT implements SearchCriteria{
+    class TEXT implements SearchCriteria, Serializable {
         private final String title = "Искомый текст";
         private String value;
 
@@ -27,7 +28,7 @@ public interface SearchCriteria {
         }
     }
 
-    class PERIOD implements SearchCriteria{
+    class PERIOD implements SearchCriteria, Serializable {
         private final String title = "Период";
         private int value;
 
@@ -51,7 +52,7 @@ public interface SearchCriteria {
         }
     }
 
-    class DATE_FROM implements SearchCriteria{
+    class DATE_FROM implements SearchCriteria, Serializable {
         private final String title = "Дата с";
         private LocalDateTime value;
 
@@ -75,7 +76,7 @@ public interface SearchCriteria {
         }
     }
 
-    enum EXPERIENCE implements SearchCriteria{
+    enum EXPERIENCE implements SearchCriteria, Serializable {
         noExperience("нет опыта"),
         between1And3("От 1 года до 3 лет"),
         between3And6("От 3 до 6 лет"),
@@ -99,7 +100,7 @@ public interface SearchCriteria {
         }
     }
 
-    enum SEARCH_FIELD implements SearchCriteria{
+    enum SEARCH_FIELD implements SearchCriteria, Serializable {
         name("в названии вакансии"),
         company_name("в названии компании"),
         description("в описании вакансии");
@@ -122,9 +123,9 @@ public interface SearchCriteria {
         }
     }
 
-    enum AREA implements SearchCriteria{
-        Belarus(16, "Беларусь"),
-        Russia(113, "Россия");
+    enum AREA implements SearchCriteria, Serializable {
+        BELARUS(16, "Беларусь"),
+        RUSSIA(113, "Россия");
 
         public final String title = "Страна";
         public final String criteriaName;

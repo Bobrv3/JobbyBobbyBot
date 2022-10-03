@@ -2,18 +2,31 @@ package org.bobrov.JobbyBobby.model.criteria;
 
 import lombok.Data;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.Table;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The {@code Criteria} class is designed to provide search by criteria
+ * The {@code Filter} class is designed to provide search by criteria
  */
 
 @Data
-public class Criteria {
-    private Map<String, SearchCriteria> criteria = new HashMap<>();
+@Entity
+@Table(name = "filters")
+public class Filter {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public Criteria() {
+    @Lob
+    private HashMap<String, SearchCriteria> criteria = new HashMap<>();
+
+    public Filter() {
     }
 
     public void add(String searchCriteria, SearchCriteria value) {

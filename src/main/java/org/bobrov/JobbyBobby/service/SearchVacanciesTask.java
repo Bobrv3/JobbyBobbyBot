@@ -3,8 +3,9 @@ package org.bobrov.JobbyBobby.service;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.bobrov.JobbyBobby.dao.FilterRepository;
 import org.bobrov.JobbyBobby.model.Vacancy;
-import org.bobrov.JobbyBobby.model.criteria.Criteria;
+import org.bobrov.JobbyBobby.model.criteria.Filter;
 import org.bobrov.JobbyBobby.model.criteria.SearchCriteria;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -27,19 +28,23 @@ public class SearchVacanciesTask extends TimerTask {
     @Value("${searchPeriod.minute}")
     private int timeInterval;
 
+    private final FilterRepository filterRepository;
+
     @Override
     @SneakyThrows
     public void run() {
-        // configure search criteria
-        Criteria criteria = new Criteria();
-        criteria.add(SearchCriteria.TEXT.class.getSimpleName().toLowerCase(), new SearchCriteria.TEXT("java"));
-        criteria.add(SearchCriteria.AREA.class.getSimpleName().toLowerCase(), SearchCriteria.AREA.Belarus);
-        criteria.add(SearchCriteria.SEARCH_FIELD.class.getSimpleName().toLowerCase(),  SearchCriteria.SEARCH_FIELD.name);
-        criteria.add(SearchCriteria.EXPERIENCE.class.getSimpleName().toLowerCase(),  SearchCriteria.EXPERIENCE.noExperience);
-        criteria.add(SearchCriteria.DATE_FROM.class.getSimpleName().toLowerCase(),
+        // configure search filter
+        Filter filter = new Filter();
+        filter.add(SearchCriteria.TEXT.class.getSimpleName().toLowerCase(), new SearchCriteria.TEXT("java"));
+        filter.add(SearchCriteria.AREA.class.getSimpleName().toLowerCase(), SearchCriteria.AREA.BELARUS);
+        filter.add(SearchCriteria.SEARCH_FIELD.class.getSimpleName().toLowerCase(),  SearchCriteria.SEARCH_FIELD.name);
+        filter.add(SearchCriteria.EXPERIENCE.class.getSimpleName().toLowerCase(),  SearchCriteria.EXPERIENCE.noExperience);
+        filter.add(SearchCriteria.DATE_FROM.class.getSimpleName().toLowerCase(),
                 new SearchCriteria.DATE_FROM(LocalDateTime.now().minusMinutes(timeInterval)));
 
-        List<Vacancy> foundVacancies = vacancyService.searchOnHH(criteria);
+        filterRepository.save(filter);
+
+        List<Vacancy> foundVacancies = vacancyService.searchOnHH(filter);
 
         if (!foundVacancies.isEmpty()) {
             checkNewVacancies(foundVacancies);
