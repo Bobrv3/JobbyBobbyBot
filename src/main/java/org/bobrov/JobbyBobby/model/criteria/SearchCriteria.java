@@ -5,8 +5,12 @@ import java.time.LocalDateTime;
 
 public interface SearchCriteria {
     class TEXT implements SearchCriteria, Serializable {
-        private final String title = "Искомый текст";
+        private final String title = "Искать";
         private String value;
+
+        public TEXT() {
+            value = "java";
+        }
 
         public TEXT(String value) {
             this.value = value;
@@ -32,6 +36,10 @@ public interface SearchCriteria {
         private final String title = "Период";
         private int value;
 
+        public PERIOD() {
+            value = 1;
+        }
+
         public PERIOD(int value) {
             this.value = value;
         }
@@ -55,6 +63,10 @@ public interface SearchCriteria {
     class DATE_FROM implements SearchCriteria, Serializable {
         private final String title = "Дата с";
         private LocalDateTime value;
+
+        public DATE_FROM() {
+            value = LocalDateTime.now().minusDays(1);
+        }
 
         public DATE_FROM(LocalDateTime value) {
             this.value = value;
