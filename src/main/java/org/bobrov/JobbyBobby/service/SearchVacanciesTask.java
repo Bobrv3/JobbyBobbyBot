@@ -7,11 +7,15 @@ import org.bobrov.JobbyBobby.model.Vacancy;
 import org.bobrov.JobbyBobby.model.criteria.Filter;
 import org.bobrov.JobbyBobby.model.criteria.SearchCriteria;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.TimerTask;
 
@@ -19,29 +23,36 @@ import java.util.TimerTask;
  * When the application has risen, the job search task is launched
  */
 @Component
+@Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @RequiredArgsConstructor
 @Data
 public class SearchVacanciesTask extends TimerTask {
     private final VacancyService vacancyService;
     private final JobbyBot jobbyBot;
+    private List<Filter> filters;
+    private boolean firstSearch = true;
     @Value("${searchPeriod.minute}")
     private int timeInterval;
-    private final FilterService filterService;
 
     @Override
     @SneakyThrows
     public void run() {
-        // configure search filter
-        Filter filter = new Filter();
-        filter.add(new SearchCriteria.TEXT("java"));
-        filter.add(SearchCriteria.AREA.BELARUS);
-        filter.add(SearchCriteria.SEARCH_FIELD.name);
-        filter.add(SearchCriteria.EXPERIENCE.noExperience);
-        filter.add(new SearchCriteria.DATE_FROM(LocalDateTime.now().minusMinutes(timeInterval)));
+        List<Vacancy> foundVacancies = new ArrayList<>();
 
-        filterService.save(filter);
+        if (firstSearch) {
+            for (Filter filter : filters) {
+                Collections.addAll(foundVacancies, vacancyService.searchOnHH(filter).toArray(new Vacancy[0]));
+            }
+            firstSearch = false;
+        } else {
+            for (Filter filter : filters) {
+                filter.getCriteria()
+                        .removeIf(criteria -> criteria instanceof SearchCriteria.PERIOD);
+                filter.add(new SearchCriteria.DATE_FROM(LocalDateTime.now().minusMinutes(timeInterval)));
 
-        List<Vacancy> foundVacancies = vacancyService.searchOnHH(filter);
+                Collections.addAll(foundVacancies, vacancyService.searchOnHH(filter).toArray(new Vacancy[0]));
+            }
+        }
 
         if (!foundVacancies.isEmpty()) {
             checkNewVacancies(foundVacancies);

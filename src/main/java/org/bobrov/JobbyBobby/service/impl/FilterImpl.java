@@ -6,6 +6,8 @@ import org.bobrov.JobbyBobby.model.criteria.Filter;
 import org.bobrov.JobbyBobby.service.FilterService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class FilterImpl implements FilterService {
@@ -15,5 +17,10 @@ public class FilterImpl implements FilterService {
     @Override
     public Filter save(Filter filter) {
         return repo.save(filter);
+    }
+
+    @Override
+    public List<Filter> findAll() {
+        return repo.findAll();
     }
 }
