@@ -1,47 +1,16 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main</title>
 </head>
 
 <body>
-    <form method="POST" th:action="@{/search}">
-        <div class="criteria-group" id="text">
-            <b><span th:text="${TEXT.title}">title</span></b>
-            <input type="text" th:value="${TEXT.criteriaName}" />
-        </div>
-        <br>
-        <div class="criteria-group" id="period">
-            <b><span th:text="${PERIOD.title}">title</span></b>
-            <input type="number" min="1" size="3" th:value="${PERIOD.criteriaName}" />
-        </div>
-
-        <div class="criteria-group" id="search_field">
-            <h3 th:text="${SEARCH_FIELD[0].title}">title</h3>
-            <div th:each="search_field : ${SEARCH_FIELD}">
-                <input type="checkbox" th:value="${search_field}" />
-                <span th:text="${search_field.criteriaName}">area</span>
-            </div>
-        </div>
-
-        <div class="criteria-group" id="area">
-            <h3 th:text="${AREA[0].title}">title</h3>
-            <div th:each="area : ${AREA}">
-                <input type="checkbox" th:value="${area}" />
-                <span th:text="${area.criteriaName}">area</span>
-            </div>
-        </div>
-
-        <div class="criteria-group" id="experience">
-            <h3 th:text="${EXPERIENCE[0].title}">title</h3>
-            <div th:each="experience : ${EXPERIENCE}">
-                <input type="checkbox" th:value="${experience}" />
-                <span th:text="${experience.criteriaName}">area</span>
-            </div>
-        </div>
-    </form>
+    <h1>Что нужно сделать?</h1>
+    <a href="/filter">Задать фильтр</a>
 </body>
 
 </html>

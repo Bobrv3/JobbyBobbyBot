@@ -3,7 +3,6 @@ package org.bobrov.JobbyBobby.service;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.bobrov.JobbyBobby.dao.FilterRepository;
 import org.bobrov.JobbyBobby.model.Vacancy;
 import org.bobrov.JobbyBobby.model.criteria.Filter;
 import org.bobrov.JobbyBobby.model.criteria.SearchCriteria;
@@ -27,22 +26,20 @@ public class SearchVacanciesTask extends TimerTask {
     private final JobbyBot jobbyBot;
     @Value("${searchPeriod.minute}")
     private int timeInterval;
-
-    private final FilterRepository filterRepository;
+    private final FilterService filterService;
 
     @Override
     @SneakyThrows
     public void run() {
         // configure search filter
         Filter filter = new Filter();
-        filter.add(SearchCriteria.TEXT.class.getSimpleName().toLowerCase(), new SearchCriteria.TEXT("java"));
-        filter.add(SearchCriteria.AREA.class.getSimpleName().toLowerCase(), SearchCriteria.AREA.BELARUS);
-        filter.add(SearchCriteria.SEARCH_FIELD.class.getSimpleName().toLowerCase(),  SearchCriteria.SEARCH_FIELD.name);
-        filter.add(SearchCriteria.EXPERIENCE.class.getSimpleName().toLowerCase(),  SearchCriteria.EXPERIENCE.noExperience);
-        filter.add(SearchCriteria.DATE_FROM.class.getSimpleName().toLowerCase(),
-                new SearchCriteria.DATE_FROM(LocalDateTime.now().minusMinutes(timeInterval)));
+        filter.add(new SearchCriteria.TEXT("java"));
+        filter.add(SearchCriteria.AREA.BELARUS);
+        filter.add(SearchCriteria.SEARCH_FIELD.name);
+        filter.add(SearchCriteria.EXPERIENCE.noExperience);
+        filter.add(new SearchCriteria.DATE_FROM(LocalDateTime.now().minusMinutes(timeInterval)));
 
-        filterRepository.save(filter);
+        filterService.save(filter);
 
         List<Vacancy> foundVacancies = vacancyService.searchOnHH(filter);
 

@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.EventListener;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -36,7 +35,6 @@ public class AppConfig {
 
     @EventListener
     @SneakyThrows
-    @Profile("prod")
     public void handleAppFailed(ContextClosedEvent event) {
         bot.execute(SendMessage.builder()
                 .chatId("388469857")

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.Map;
 
-@FeignClient(name = "payments", url = "https://api.hh.ru")
+@FeignClient(name = "vacancy", url = "https://api.hh.ru")
 public interface HHProxy {
   @GetMapping("/vacancies")
   HHresponse findVacancies(
