@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Filters</title>
+</head>
+
+<body>
+    Использующиеся фильтры:
+    <table th:if="${filters.size} != 0" border="1">
+        <th>№</th>
+        <th>Описание</th>
+        <div th:each="filter : ${filters}">
+            <tr>
+                <td th:text="${filter.id}"></td>
+                <td th:text="${filter}">txt</td>
+                <td>
+                    <button th:id="${filter.id}" class="removeBtn" type="submit">remove</button>
+                </td>
+            </tr>
+        </div>
+
+    </table>
+
+    <p th:if="${filters.size} == 0">Фильтры отсутствуют</p>
+
+
+    <script th:src="@{/js/fetch.js}"></script>
+    <script th:src="@{/js/filter-list.js}"></script>
+</body>
+
+</html>

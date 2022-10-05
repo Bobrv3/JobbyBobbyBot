@@ -23,4 +23,9 @@ public class FilterImpl implements FilterService {
     public List<Filter> findAll() {
         return repo.findAll();
     }
+
+    @Override
+    public void remove(Long id) {
+        repo.deleteById(id);
+    }
 }
