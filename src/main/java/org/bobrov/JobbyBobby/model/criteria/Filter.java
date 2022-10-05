@@ -1,5 +1,6 @@
 package org.bobrov.JobbyBobby.model.criteria;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
@@ -21,6 +22,7 @@ import java.util.Map;
 @Table(name = "filters")
 @EqualsAndHashCode
 @NoArgsConstructor
+@Data
 public class Filter {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,14 +32,6 @@ public class Filter {
 
     public void add(SearchCriteria value) {
         criteria.add(value);
-    }
-
-    public void remove(String searchCriteria) {
-        criteria.remove(searchCriteria);
-    }
-
-    public ArrayList<SearchCriteria> getCriteria() {
-        return criteria;
     }
 
     /**
@@ -58,7 +52,7 @@ public class Filter {
     public String toString() {
         StringBuilder msg = new StringBuilder("Осуществляется поиск вакансий по критериям:\n");
         for (SearchCriteria cr : criteria) {
-            msg.append(String.format("\uD83D\uDCCD %s - %s\n", cr.getTitle(), cr.getCriteriaName()));
+            msg.append(String.format("\uD83D\uDCCD %s - %s%n", cr.getTitle(), cr.getCriteriaName()));
         }
         return msg.toString();
     }

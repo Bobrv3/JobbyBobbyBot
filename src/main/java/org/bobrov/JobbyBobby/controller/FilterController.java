@@ -5,14 +5,19 @@ import lombok.SneakyThrows;
 import org.bobrov.JobbyBobby.model.criteria.Filter;
 import org.bobrov.JobbyBobby.model.criteria.SearchCriteria;
 import org.bobrov.JobbyBobby.service.FilterService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -23,7 +28,16 @@ public class FilterController {
 
     @GetMapping
     @SneakyThrows
-    public String showFilter(Model model){
+    public String getFilters(Model model){
+        List<Filter> filters = filterService.findAll();
+        model.addAttribute("filters", filters);
+
+        return "filters-list";
+    }
+
+    @GetMapping("/menu")
+    @SneakyThrows
+    public String showFilterMenu(Model model){
         Class<?>[] classes = SearchCriteria.class.getClasses();
         for (Class<?> c : classes) {
             if (c.isEnum()) {
@@ -71,5 +85,11 @@ public class FilterController {
         filterService.save(filter);
 
         return "index";
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void remove(@PathVariable Long id) {
+        filterService.remove(id);
     }
 }

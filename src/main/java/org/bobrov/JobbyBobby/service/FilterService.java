@@ -7,4 +7,6 @@ import java.util.List;
 public interface FilterService {
     Filter save(Filter filter);
     List<Filter> findAll();
+
+    void remove(Long id);
 }

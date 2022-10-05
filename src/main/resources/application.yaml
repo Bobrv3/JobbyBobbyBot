@@ -1,9 +1,4 @@
 spring:
-  config:
-    activate:
-      on-profile:
-        - dev
-
   datasource:
     generate-unique-name: false
     name: jobbyDB
@@ -16,12 +11,14 @@ spring:
   h2:
     console:
       enabled: true
+  thymeleaf:
+    cache: false
 
 telegrambot:
-  botUsername:
-  botToken:
+  botUsername: ${BOT_USERNAME:}
+  botToken: ${BOT_TOKEN:}
   botPath: "/jobby"
-  webHookPath:
+  webHookPath: ${BOT_WEBHOOK:}
 
 searchPeriod:
   minute: 30
@@ -33,6 +30,16 @@ spring:
       on-profile:
         - prod
 
+  datasource:
+    generate-unique-name: false
+    name: jobbyDB
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
 server:
   port: ${PORT:8080}
 
@@ -41,3 +48,6 @@ telegrambot:
   botToken: ${BOT_TOKEN}
   botPath: "/jobby"
   webHookPath: ${BOT_WEBHOOK}
+
+searchPeriod:
+  minute: 30
