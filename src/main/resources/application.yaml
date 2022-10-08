@@ -1,4 +1,28 @@
 spring:
+  config:
+    activate:
+      on-profile:
+        - common
+
+server:
+  port: ${PORT:8080}
+
+telegrambot:
+  botUsername: ${BOT_USERNAME}
+  botToken: ${BOT_TOKEN}
+  botPath: "/jobby"
+  webHookPath: ${BOT_WEBHOOK}
+
+searchPeriod:
+  minute: 30
+
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - dev
+
   datasource:
     generate-unique-name: false
     name: jobbyDB
@@ -14,15 +38,6 @@ spring:
   thymeleaf:
     cache: false
 
-telegrambot:
-  botUsername: ${BOT_USERNAME:}
-  botToken: ${BOT_TOKEN:}
-  botPath: "/jobby"
-  webHookPath: ${BOT_WEBHOOK:}
-
-searchPeriod:
-  minute: 30
-
 ---
 spring:
   config:
@@ -31,23 +46,10 @@ spring:
         - prod
 
   datasource:
-    generate-unique-name: false
-    name: jobbyDB
-    username: sa
-    password:
+    url: jdbc:mysql://localhost:3306/jobby_db?serverTimezone=UTC
+    username: ${DB_USERNAME:}
+    password: ${DB_PASSWORD:}
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
-
-server:
-  port: ${PORT:8080}
-
-telegrambot:
-  botUsername: ${BOT_USERNAME}
-  botToken: ${BOT_TOKEN}
-  botPath: "/jobby"
-  webHookPath: ${BOT_WEBHOOK}
-
-searchPeriod:
-  minute: 30
