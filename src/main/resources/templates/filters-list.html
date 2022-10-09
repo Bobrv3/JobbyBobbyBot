@@ -10,11 +10,11 @@
     Использующиеся фильтры:
     <table th:if="${filters.size} != 0" border="1">
         <th>№</th>
-        <th>Описание</th>
+        <th>Критерии поиска</th>
         <div th:each="filter : ${filters}">
             <tr>
                 <td th:text="${filter.id}"></td>
-                <td th:text="${filter}">txt</td>
+                <td th:utext="${filter}">txt</td>
                 <td>
                     <button th:id="${filter.id}" class="removeBtn" type="submit">remove</button>
                 </td>

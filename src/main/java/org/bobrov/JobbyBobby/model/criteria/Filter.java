@@ -50,9 +50,9 @@ public class Filter {
 
     @Override
     public String toString() {
-        StringBuilder msg = new StringBuilder("Осуществляется поиск вакансий по критериям:\n");
+        StringBuilder msg = new StringBuilder("");
         for (SearchCriteria cr : criteria) {
-            msg.append(String.format("\uD83D\uDCCD %s - %s%n", cr.getTitle(), cr.getCriteriaName()));
+            msg.append(String.format("\uD83D\uDCCD %s - %s%n <br>", cr.getTitle(), cr.getCriteriaName()));
         }
         return msg.toString();
     }
