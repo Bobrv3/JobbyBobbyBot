@@ -3,6 +3,7 @@ package org.bobrov.JobbyBobby.service;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.bobrov.JobbyBobby.dao.VacancyRepository;
 import org.bobrov.JobbyBobby.model.Vacancy;
 import org.bobrov.JobbyBobby.model.criteria.Filter;
 import org.bobrov.JobbyBobby.model.criteria.SearchCriteria;
@@ -28,6 +29,7 @@ import java.util.TimerTask;
 @Data
 public class SearchVacanciesTask extends TimerTask {
     private final VacancyService vacancyService;
+    private final VacancyRepository vacancyRepository;
     private final JobbyBot jobbyBot;
     private List<Filter> filters;
     private boolean firstSearch = true;
@@ -74,10 +76,8 @@ public class SearchVacanciesTask extends TimerTask {
      * @param foundVacancies
      */
     private void checkNewVacancies(List<Vacancy> foundVacancies) {
-        List<Vacancy> savedVacancies = vacancyService.getAll();
-
         for (int i = 0; i < foundVacancies.size(); i++) {
-            if (savedVacancies.contains(foundVacancies.get(i))) {
+            if (vacancyRepository.existsById(foundVacancies.get(i).getId())) {
                 foundVacancies.remove(foundVacancies.get(i--));
             } else {
                 vacancyService.save(foundVacancies.get(i));
