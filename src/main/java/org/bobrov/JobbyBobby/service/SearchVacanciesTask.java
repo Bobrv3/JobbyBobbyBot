@@ -17,7 +17,10 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.TimerTask;
 
 /**
@@ -76,11 +79,16 @@ public class SearchVacanciesTask extends TimerTask {
      * @param foundVacancies
      */
     private void checkNewVacancies(List<Vacancy> foundVacancies) {
-        for (int i = 0; i < foundVacancies.size(); i++) {
-            if (vacancyRepository.existsById(foundVacancies.get(i).getId())) {
-                foundVacancies.remove(foundVacancies.get(i--));
+        Set<Vacancy> savedVacancies = new HashSet<>(vacancyRepository.findAll());
+
+        Iterator<Vacancy> iterator = foundVacancies.iterator();
+        while (iterator.hasNext()) {
+            Vacancy vacancy = iterator.next();
+
+            if (savedVacancies.add(vacancy)) {
+                vacancyRepository.save(vacancy);
             } else {
-                vacancyService.save(foundVacancies.get(i));
+                iterator.remove();
             }
         }
     }
